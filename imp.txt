@@ -1,0 +1,5 @@
+1.javascript on the spot apnai hi terminal mai run kr rhi hai y hi jadu hai nodejs kaa..mtlb server ko apnai terminal mai lekar aagyai.. node index.js
+2. nodemon kai liye firsai node start nhi krna pdtaa  ==> npm i -g nodemon
+to start --> nodemon index.js
+3==> now we will make server
+if u create server then u need to listen also

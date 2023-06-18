@@ -1,58 +1,31 @@
-// const http = require("http"); //build in module
-import http from 'http';
+import express from 'express';
 
+const app = express();
+import fs from 'fs';
+import path from 'path';
 
-
-//nodemon is 3rd party module
-
-
-//it is file module
-// const gfName = require('./features');
-
-import { gfName1, generate_love } from './features.js'; //modern
-import gfName from './features.js'; //modern
-
-console.log(gfName);
-console.log(gfName1);
-const percent = generate_love();
-// console.log(percent);
-
-
-
-import fs from "fs";
-// const home = fs.readFile('./index.html', () => {
-//     console.log("File Read");
-// })
-
-
-const server = http.createServer((req, res) => {
-    console.log(req.url);
-
-
-    // this is server routing not react routing
-    if (req.url === "/about") {
-        res.end("about page");
-    }
-    else if (req.url === "/contact") {
-        res.end("contact page");
-    }
-    else if (req.url === "/home") {
-        fs.readFile('./home.html', (err, data) => {
-            console.log("File Read");
-            console.log("data", data);
-            res.end(data);
-        })
-
-    }
-    else if (req.url === "/pyaar") {
-        res.end(`pyaar bgera dhoka hai dhek le apni percent ${percent}`);
-    }
-    else {
-        res.end("PAge not found");
-    }
+app.get("/", (req, res) => {
+    res.send("hiiiiiiiii normal url");
 });
+app.get("/data", (req, res) => {
+    res.send("dhek beta status code change krdia").status(404); //to set the status code 
+});
+app.get("/myapi", (req, res) => {
+    res.json({
+        success: true,
+        products: ["shoes,leather"]
+    }); //to set the status code 
+})
+app.get("/homefile", (req, res) => {
+    const file = fs.readFileSync("./home.html");
+    // console.log(__dirname);//IT CAN BE ONLY IN COMMON TPE BALA
+    console.log(path.resolve());
+    const pathlocation = path.resolve();
+
+    res.sendFile(path.join(pathlocation, "./home.html"));
+})
 
 
-server.listen(5000, () => {
-    console.log("server is listing");
+app.listen(5000, () => {
+    console.log("server is working");
 })

@@ -4,3 +4,6 @@ to start --> nodemon index.js
 3==> now we will make server
 if u create server then u need to listen also
 4-> express js install kra it is a frame work
+
+5-> views is a bydefault thing 
+6-> public is a static file folder by default ....index.html

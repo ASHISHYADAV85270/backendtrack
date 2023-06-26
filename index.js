@@ -1,31 +1,25 @@
-import express from 'express';
-
+import express from "express";
 const app = express();
-import fs from 'fs';
 import path from 'path';
 
-app.get("/", (req, res) => {
-    res.send("hiiiiiiiii normal url");
-});
-app.get("/data", (req, res) => {
-    res.send("dhek beta status code change krdia").status(404); //to set the status code 
-});
-app.get("/myapi", (req, res) => {
-    res.json({
-        success: true,
-        products: ["shoes,leather"]
-    }); //to set the status code 
-})
-app.get("/homefile", (req, res) => {
-    const file = fs.readFileSync("./home.html");
-    // console.log(__dirname);//IT CAN BE ONLY IN COMMON TPE BALA
-    console.log(path.resolve());
-    const pathlocation = path.resolve();
+//setting up view engine
+app.set("view engine", "ejs");
 
-    res.sendFile(path.join(pathlocation, "./home.html"));
+
+/*excessing static folder --ismai front end ka project  jaiga*/
+// express.static('./public'); // we can use it like this 
+// express.static(path.join(path.resolve(), "public")); //it is a middleware..so use app.use
+// console.log(path.join(path.resolve(), "public"));
+app.use(express.static(path.join(path.resolve(), "public")));
+
+app.get('/', (req, res) => {
+    //render isliye use krtai hai jis sai dynamic data bhej skai 
+    res.render("index", { name: "ASHISH" });  //but by default public baale pai jaiga
 })
 
-
+app.get('/haha', (req, res) => {
+    res.sendFile("index.html"); //ismaai absolute path dene kii need nhi hai because hmnai set krdia hai ki hmara static folder y hai
+})
 app.listen(5000, () => {
     console.log("server is working");
 })

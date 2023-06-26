@@ -2,24 +2,37 @@ import express from "express";
 const app = express();
 import path from 'path';
 
+
+const users = [];
+/* to access form  we need a middleware*/
+app.use(express.urlencoded({ extended: true }))
+
 //setting up view engine
 app.set("view engine", "ejs");
 
 
-/*excessing static folder --ismai front end ka project  jaiga*/
-// express.static('./public'); // we can use it like this 
-// express.static(path.join(path.resolve(), "public")); //it is a middleware..so use app.use
-// console.log(path.join(path.resolve(), "public"));
-app.use(express.static(path.join(path.resolve(), "public")));
-
 app.get('/', (req, res) => {
-    //render isliye use krtai hai jis sai dynamic data bhej skai 
-    res.render("index", { name: "ASHISH" });  //but by default public baale pai jaiga
+    res.render("index");
 })
 
-app.get('/haha', (req, res) => {
-    res.sendFile("index.html"); //ismaai absolute path dene kii need nhi hai because hmnai set krdia hai ki hmara static folder y hai
+app.get('/giveusers', (req, res) => {
+    res.json({ users, });
 })
+app.get('/success', (req, res) => {
+    res.render("success");
+})
+
+app.post('/contactus', (req, res) => {
+    console.log(req.body);
+    users.push({
+        Username: req.body.name,
+        Useremail: req.body.email
+    });
+    res.redirect("/success");
+
+})
+
+
 app.listen(5000, () => {
     console.log("server is working");
 })

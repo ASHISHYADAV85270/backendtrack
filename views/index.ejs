@@ -7,8 +7,12 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    chl bhosdike
-    <p> Hello  <%= name%> </p>
-    <h2><%= locals.name %></h2>
+    <form method="post" action="/contactus">
+        <label for="fname">First name:</label><br>
+        <input type="text"  name="name"><br>
+        <label for="email">Email:</label><br>
+        <input type="email"  name="email">
+        <input type="submit" value="Submit">
+      </form>
 </body>
 </html>

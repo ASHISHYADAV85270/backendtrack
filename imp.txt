@@ -7,3 +7,6 @@ if u create server then u need to listen also
 
 5-> views is a bydefault thing 
 6-> public is a static file folder by default ....index.html
+
+7->install Moongose first then, Moongose is used to connect mongodb with nodejs
+8-> we need to create schema first to save data 

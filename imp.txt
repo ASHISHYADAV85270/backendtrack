@@ -14,5 +14,4 @@ if u create server then u need to listen also
 8-> we need to create schema first to save data 
 
 ***Authentication***
-2 methods =>
-1->normal login bgera
+9->cookies is a middle ware function we can not use it directly...we requre cookie parser for it

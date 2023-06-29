@@ -1,78 +1,67 @@
-import express from "express";
+import express from 'express';
+import cookieParser from 'cookie-parser';
 const app = express();
-import path from 'path';
-import mongoose from "mongoose";
-//db name boo hoga jis database mai daalna hai ...agr  nhi hoga to fir bnjaiga 
-mongoose.connect('mongodb://localhost:27017', { dbName: "backendashish", }).then(() => { console.log("data base connected") }).catch((err) => { console.log(err) });
-
-const messageSchema = new mongoose.Schema({
-    name: String,
-    email: String,
-});
-
-//it is the name of the collection that is to be created and the schema which we are using
-const Messge = mongoose.model("messageofashishes", messageSchema);
 
 
-
-
-
-/* to access form  response data we need a middleware*/
-app.use(express.urlencoded({ extended: true }))
-
-//setting up view engine--> jissai hmlog views baale ko normal address sai bhi excess kr skai
+//setting up view engine
 app.set("view engine", "ejs");
 
 
-// the starting point of the page
-app.get('/', (req, res) => {
-    res.render("index");
+app.use(cookieParser());
+
+
+
+
+
+
+
+app.get("/", (req, res) => {
+
+    const { token } = req.cookies;
+    if (token) {
+        res.render("logout");
+    }
+    else {
+        res.render("login");
+    }
+});
+
+app.post("/login", (req, res) => {
+
+    res.cookie("token", "hiashish", {
+        httpOnly: true, // for security purpose ..so that client can not excess it
+        expires: new Date(Date.now() + 120 * 1000),
+    });
+    res.redirect("/");
 });
 
 
 
 
-app.get('/getdata', async (req, res) => {
-    res.send("data is this");
-    const users = await Messge.find({});  // to get data
-    console.log(users);
+app.get('/logout', (req, res) => {
+
+    res.cookie("token", null, {
+        httpOnly: true, // for security purpose ..so that client can not excess it
+        expires: new Date(Date.now()),
+
+    });
+    res.redirect("/");
 });
 
-app.get('/insertdata', (req, res) => {
-    const messageData = {
-        name: "Abhi",
-        email: "bt2ewfwe@gmail.com"
-    };
-    Messge.create(messageData).then(() => {
-        res.send("i will teach u mongodb")
-        console.log("DAta inserted");
-    })
+
+app.get('/cookiesdata', (req, res) => {
+    /**cookies is a middle ware function we can not use it directly...we requre cookie parser for it */
+    const data = req.cookies;
+    console.log(data);
+    res.send(data);
 })
 
-//using await it is usually practice in the market
-app.get('/getdataasynce', async (req, res) => {
-    const messageData = {
-        name: "Ashish",
-        email: "bt2ewf2352443252we@gmail.com"
-    };
-    await Messge.create(messageData);
-    res.send("i will teach u mongodb by async");
-});
 
 
-//it the place where form is directing us
-app.post('/contactus', async (req, res) => {
-    const messageData = {
-        name: req.body.name,
-        email: req.body.email,
-    };
-    await Messge.create(messageData);
-    res.send("data inserted succesfully")
 
-})
 
 
 
 app.listen(5000, () => {
-    console.log("server is working");
+    console.log("Server connected");
 })

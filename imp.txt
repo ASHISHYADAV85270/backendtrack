@@ -4,9 +4,15 @@ to start --> nodemon index.js
 3==> now we will make server
 if u create server then u need to listen also
 4-> express js install kra it is a frame work
+ for routing we will use react or next js 
+
 
 5-> views is a bydefault thing 
 6-> public is a static file folder by default ....index.html
 
 7->install Moongose first then, Moongose is used to connect mongodb with nodejs
 8-> we need to create schema first to save data 
+
+***Authentication***
+2 methods =>
+1->normal login bgera

@@ -2,6 +2,9 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 const app = express();
+import bcrypt from "bcrypt";
+
+// to avoid hacking 
 import jwt from 'jsonwebtoken';
 //setting up view engine
 app.set("view engine", "ejs");
@@ -17,7 +20,9 @@ mongoose.connect('mongodb://localhost:27017', { dbName: "backendashish", }).then
 
 const Userschema = mongoose.Schema({
     name: String,
-    email: String
+    email: String,
+    password: String,
+
 });
 
 
@@ -26,82 +31,95 @@ const Userschema = mongoose.Schema({
 
 const UserModel = mongoose.model("Userdata", Userschema);
 
+
+
+
 //it is a middleware or we can say it is a handler .... 
 const isAuthenticated = async (req, res, next) => {
     const { token } = req.cookies;
     if (token) {
-
         //decoding data with the help of jwt
         const decodeddata = jwt.verify(token, "qwerty");
-
-
         //for searching and getting data 
         req.user = await UserModel.findById(decodeddata._id);
-        console.log(decodeddata);
-
         next();
     }
     else {
-        res.render("login");
+        res.redirect("/login");
     }
 }
 
 
-
+//done
 app.get("/", isAuthenticated, (req, res) => {
-    console.log(req.user);
-    res.render("logout", { name: req.user.name });
+    res.render("logout");
 });
 
-app.post("/login", async (req, res) => {
+//done
+app.get('/register', (req, res) => {
+    res.render('register');
+})
 
-    /*  to avoid insertion of same user*/
-    const { name, email } = req.body;
-    const userdata = await UserModel.findOne({ email });
-    if (!userdata) {
-        res.send("Register First");
-        return
-    }
-
-
-    console.log(name, email);
-    const newuserdata = await UserModel.create({
-        name, email
-    });
-    console.log("successfully saved to data base");
-
-    // qwerty is the security key here
-    const token = jwt.sign({ _id: newuserdata._id }, "qwerty");
-    console.log(token);
-    res.cookie("token", token, {
-        httpOnly: true, // for security purpose ..so that client can not excess it
-        expires: new Date(Date.now() + 120 * 1000),
-    });
-    res.redirect("/");
-
-});
+//done
+app.get('/login', (res, req) => {
+    req.render('login');
+})
 
 
 
-
-
-
-
-
-
-
+// done
 app.get('/logout', (req, res) => {
-
-
-
     res.cookie("token", null, {
         httpOnly: true, // for security purpose ..so that client can not excess it
         expires: new Date(Date.now()),
-
     });
     res.redirect("/");
 });
 
+
+
+app.post("/login", async (req, res) => {
+    /*  to avoid insertion of same user*/
+    const { password, email } = req.body;
+    const userdata = await UserModel.findOne({ email });
+    if (!userdata) {
+        return res.redirect("/register");
+    }
+
+
+    const isMatch = await bcrypt.compare(password, userdata.password);
+
+    console.log(password);
+    if (isMatch) {
+
+        const token = jwt.sign({ _id: userdata._id }, "qwerty");
+
+        res.cookie("token", token, {
+            httpOnly: true,
+            expires: new Date(Date.now() + 60 * 1000),
+        });
+        return res.render('logout', { name: userdata.name });
+    }
+    else {
+        res.render('login', { message: "Wrong Password" });
+        return res.redirect('/login');
+    }
+});
+
+
+app.post('/register', async (req, res) => {
+    /*  to avoid insertion of same user*/
+    const { name, email, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const userdata = await UserModel.findOne({ email });
+    if (userdata) {
+        return res.redirect('/login');
+    }
+    const newuserdata = await UserModel.create({
+        name, email, password: hashedPassword,
+    });
+    res.redirect("/");
+})
 app.listen(5000, () => {
     console.log("Server connected");
 })

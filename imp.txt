@@ -19,3 +19,12 @@ if u create server then u need to listen also
 11->browser sai bydefault get method call hota hai
 12-> router provided by express is also a middleware
 13-> controller mai saare kai saare functions hongai
+14-> spilliting all the things to make things readable is called mvc=> modle view controller
+
+
+****folder structure ****
+chiz========folder
+database ->  data
+userRouter->  routes
+Models   ->    Models
+function  -> controller

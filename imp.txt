@@ -16,3 +16,4 @@ if u create server then u need to listen also
 ***Authentication***
 9->cookies is a middle ware function we can not use it directly...we requre cookie parser for it
 10-> we should not directly send our id to the token ...other wise hacking hojaigi...to do security ..we use jsonwebtoken lib ..which we are using as jwt
+11->browser sai bydefault get method call hota hai

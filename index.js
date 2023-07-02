@@ -1,8 +1,6 @@
 import express, { urlencoded } from 'express';
 import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
-import cookieParser from 'cookie-parser';
-import  userRouter from './routes/user.js';
+import userRouter from './routes/user.js';
 const app = express();
 
 // to avoid hacking 
@@ -18,8 +16,10 @@ mongoose
 //to excesss json data from body 
 app.use(express.json());
 //using router is also a middle ware 
-app.use(userRouter);
+// app.use(userRouter);
 
+/* is we want to give a custom prefix url to router */
+app.use("/getusers", userRouter);
 
 
 
